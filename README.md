@@ -142,6 +142,68 @@ var output = binder.ko.shellExec(cmd, wait);
 
 ## Helpers to handle files ##
 
+Test if a path is a directory.
+```javascript
+var ok = binder.ko.pathIsDir(path);
+```
+
+Test if a path exists.
+```javascript
+var ok = binder.ko.pathExists(path);
+```
+
+Get the directory part of a path.
+```javascript
+var dir_path = binder.ko.pathDirectory(path);
+```
+
+Normalize a path by collapsing redundant separators and up-level references so that A//B, A/B/, A/./B and A/foo/../B all become A/B.
+```javascript
+path = binder.ko.pathNormalize(path);
+```
+
+Replace an initial component of ~ or ~user replaced by that user‘s home directory
+```javascript
+var path = binder.ko.pathExpandUser("~/Desktop/test.js");
+```
+
+Returns a path without a file extensions
+```javascript
+var path = binder.ko.pathWithoutExtension("~/Desktop/test.js");
+```
+
+Returns the extension of a file's path.
+```javascript
+var ext = binder.ko.pathGetExtension("/Desktop/test.js");
+```
+
+Build a URI for a given local path.
+```javascript
+var url = binder.ko.pathGetURI(path);
+```
+
+Join to paths.
+```javascript
+var path = "/Users/ctk";
+var file_path = binder.ko.pathJoin(path, "Desktop/test.php");
+```
+
+Test if a path is an absolute path.
+```javascript
+var absolute_path = "";
+if( binder.ko.pathIsAbsolute(path) ){
+	absolute_path = path;
+}else{
+	//make an absolute path using the current working directory
+	absolute_path = binder.ko.pathJoin(gCWD, path);
+}
+```
+
+Get an array of file names in a folder.
+```javascript
+var items = binder.ko.pathListFiles( dir_path );
+```
+
  ```javascript
  binder.ko.currentFilePath();
  ```
@@ -150,10 +212,7 @@ var output = binder.ko.shellExec(cmd, wait);
 binder.ko.currentFileDir();
 ```
 
-Get an array of file names in a folder.
-```javascript
-var items = binder.ko.getFilesInPath( dir_path );
-```
+
 
 Returns an instance of [nsILocalFile](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsILocalFile) from a given path.
 

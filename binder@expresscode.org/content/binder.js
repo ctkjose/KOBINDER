@@ -1,11 +1,10 @@
-if (typeof(ctk) == 'undefined') {
-  var ctk = {};
-}
 
 function log(msg) {
-	return;
-    if (!window.gLogFile) {
-        var filename = "/Users/ctk/komodo.log";
+	if (!window.gLogFile) {
+
+		var dirsSvc = Components.classes['@activestate.com/koDirs;1'].getService(Components.interfaces.koIDirs);
+		var filename = binder.ko.comp_ospath.join(dirsSvc.userDataDir, 'binder.log');
+
         var fileSvc = Components.classes["@activestate.com/koFileService;1"].getService(Components.interfaces.koIFileService);
         var koIFileEx = fileSvc.getFileFromURI(ko.uriparse.localPathToURI(filename));
         // Initialize the file.
@@ -212,12 +211,7 @@ binder.ko.createFileFromPath = function(path){
     file.initWithPath(path);
 	return file;
 };
-binder.ko.getFilesInPath = function(p){
-		var subPaths = binder.ko.comp_os.listdir(p, {}).filter(
-			function(basename) { return (basename != '.' && basename != '..'); }
-		);
-		return subPaths;
-};
+
 binder.ko.currentFileDir = function() {
     return ko.interpolate.currentFilePath().replace(/[\/\\][^\/\\]+$/, '');
 };
@@ -228,6 +222,43 @@ binder.ko.currentFilePath = function() {
 binder.ko.isDocInActiveProject = function(d){
 	//if ((d.file.indexOf(o.path_project) === 0)) o.flag_in_project = true;
 };
+
+binder.ko.pathListFiles = function(p){
+		var subPaths = binder.ko.comp_os.listdir(p, {}).filter(
+			function(basename) { return (basename != '.' && basename != '..'); }
+		);
+		return subPaths;
+};
+binder.ko.pathIsDir = function(path){
+	return binder.ko.comp_ospath.isdir(path);
+};
+binder.ko.pathExists = function(path){
+	return binder.ko.comp_ospath.exists(path);
+};
+binder.ko.pathJoin = function(path1, path2){
+	return binder.ko.comp_ospath.join(path1, path2);
+};
+binder.ko.pathIsAbsolute = function(path){
+	return binder.ko.comp_ospath.isabs(path);
+};
+binder.ko.pathDirectory = function(path){
+	return binder.ko.comp_ospath.dirname(path);
+};
+binder.ko.pathNormalize = function(path){
+	return binder.ko.comp_ospath.normpath(path);
+};
+binder.ko.pathExpandUser = function(path){
+	return binder.ko.comp_ospath.expanduser(path);
+};
+binder.ko.pathWithoutExtension = function(path){
+	return binder.ko.comp_ospath.withoutExtension(path);
+};
+binder.ko.pathGetExtension = function(path){
+	return ko.uriparse.ext(path);
+}
+binder.ko.pathGetURI = function(path){
+	return ko.uriparse.localPathToURI(path);
+}
 
 binder.ko.activeDoc = function(){
     var d = ko.views.manager.currentView.koDoc;
@@ -257,7 +288,7 @@ binder.ko.shellExec = function (cmd, wait=false){
 };
 
 binder.ko.loadJS = function(url, obj){
-	log("loadJS(" + url + ")");
+	log("binder.ko.loadJS(" + url + ")");
 
     var script = { url: url, file : null };
 
@@ -323,23 +354,22 @@ binder.loadBindingFromURL = function (url){
 binder.loadBindingsFromBindingFolderAtPath = function(path){
 
 	var dirsSvc = Components.classes['@activestate.com/koDirs;1'].getService(Components.interfaces.koIDirs);
-	var my_bindings = binder.ko.comp_ospath.join(path, 'komodo_bindings');
+	var my_bindings = binder.ko.pathJoin(path, 'komodo_bindings');
 
 	log("Attempting to load bindings in [" + my_bindings + "]");
-	if(!binder.ko.comp_ospath.isdir(my_bindings )){
+	if(!binder.ko.pathIsDir(my_bindings )){
 		log("No bindings in [" + my_bindings + "]");
 		return;
 	}
 
 
-	var files = binder.ko.getFilesInPath(my_bindings);
-
+	var files = binder.ko.pathListFiles(my_bindings);
 
 	files.map( function(f){
-        var ext = ko.uriparse.ext(f);
+        var ext = binder.ko.pathGetExtension(f);
         if (!ext || (ext != '.js')) return;
 
-        var url = ko.uriparse.localPathToURI( binder.ko.comp_ospath.join(my_bindings, f));
+        var url = binder.ko.pathGetURI( binder.ko.pathJoin(my_bindings, f) );
         binder.loadBindingFromURL(url);
 	});
 };
