@@ -85,27 +85,27 @@ var ok = binder.ko.projectHasPath(path);  //bool
 
 Get a string with the absolute path of the current project.
 ```javascript
-binder.ko.projectGetPath();
+var path = binder.ko.projectGetPath();
 ```
 
 Get an array with key/value pairs of all the environment variables defined in the active project.
 ```JavaScript
-binder.ko.projectGetKeys();
+var items = binder.ko.projectGetKeys();
 ```
 
 Get basic info about the active project. Returns a project object. See: Binder Value Type Project
 ```javascript
-binder.ko.getActiveProject();
+var prj = binder.ko.getActiveProject();
 ```
 
 Get basic info from a komodo project instance. Returns a project object. See: Binder Value Type Project
 ```javascript
-binder.ko.getProjectInfo(kProject);
+var prj = binder.ko.getProjectInfo(kProject);
 ```
 
 Check if the editor has an active editor view.
 ```javascript
-binder.ko.hasActiveView(); //bool
+var ok = binder.ko.hasActiveView(); //bool
 ```
 
 Display a notification.
@@ -129,10 +129,12 @@ Display an alert dialog.
 ```javascript
 binder.ko.alert("Hello world");
 ```
+
 Open a dialog window with the contents of an url.
 ```javascript
 binder.openWindow(title, url);
 ```
+
 Executes javascript code.
 ```javascript
 binder.ko.executeJavaScript(js);
