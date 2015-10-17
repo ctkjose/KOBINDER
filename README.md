@@ -12,13 +12,19 @@ Binder allows to load javascript files from different sources. In these javascri
 
 Binder looks for scripts in a folder named ```komodo_bindings``` in a couple of places.
 
-The first place Binder looks for scripts to load is in your Komodo's folder. In Mac this folder is located at ```~/Library/Application Support/KomodoEdit/9.1/```, where ```9.1``` must be replaced with your version of Komodo.
+### In the Komodo data directory ###
+
+The first place Binder looks for scripts to load is in your Komodo's folder. This folder is the User-specific data directory where Komodo store its files (userDataDir).
+
+In Mac this folder is located at ```~/Library/Application Support/KomodoEdit/9.1/```, where ```9.1``` must be replaced with your version of Komodo. In windows is in the user's ```AppData``` folder.
 
 For example in my mac the folder is ```/Users/ctk/Library/Application Support/KomodoEdit/9.2/komodo_bindings/```.
 
 Here we usually put code that we want to share globally, including Binder addons (plugins).
 
-The second place is in the root folder of a Komodo project. Files in this folder are loaded when the project is opened.
+The second place is in your user home folder. For example ```/Users/ctk/komodo_bindings/```.
+
+The third place is in the root folder of a Komodo project. Files in this folder are loaded when the project is opened ofr the first time.
 
 ## What you can put in a komodo_bindings folder... ##
 

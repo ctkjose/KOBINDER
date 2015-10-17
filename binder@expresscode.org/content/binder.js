@@ -3,10 +3,10 @@ function log(msg) {
 	if (!window.gLogFile) {
 
 		var dirsSvc = Components.classes['@activestate.com/koDirs;1'].getService(Components.interfaces.koIDirs);
-		var filename = binder.ko.comp_ospath.join(dirsSvc.userDataDir, 'binder.log');
+		var filename = binder.ko.pathJoin(dirsSvc.userDataDir, 'binder.log');
 
         var fileSvc = Components.classes["@activestate.com/koFileService;1"].getService(Components.interfaces.koIFileService);
-        var koIFileEx = fileSvc.getFileFromURI(ko.uriparse.localPathToURI(filename));
+        var koIFileEx = fileSvc.getFileFromURI(binder.ko.pathGetURI(filename));
         // Initialize the file.
         koIFileEx.open("w");
         koIFileEx.close();
@@ -333,10 +333,11 @@ binder.ko.helper_path_relativeToDir = function(f, dir){
 binder.initializeFolders = function(){
 
 	var dirsSvc = Components.classes['@activestate.com/koDirs;1'].getService(Components.interfaces.koIDirs);
-	//var p = dirsSvc.userDataDir;
 
 	binder.loadBindingsFromBindingFolderAtPath(dirsSvc.userDataDir);
 
+	var user_path = binder.ko.pathExpandUser("~");
+	binder.loadBindingsFromBindingFolderAtPath(user_path);
 }
 
 binder.pathsLoaded = [];
@@ -411,10 +412,10 @@ binder.eventProjectReady = function(subject, topic, data){
 
 
     var n = binder.project.tag + ".binder.js";
-    var nf = binder.ko.createFileFromPath(binder.ko.comp_ospath.join( binder.project.path, n));
+    var nf = binder.ko.createFileFromPath(binder.ko.pathJoin( binder.project.path, n));
     log("seraching for " + nf.path);
     if( nf.exists() ){
-        var url = ko.uriparse.localPathToURI( nf.path );
+        var url = binder.ko.pathGetURI( nf.path );
         binder.loadBindingFromURL(url);
     }
 
