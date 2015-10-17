@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!DOCTYPE overlay PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+
+
+<window id="dialog-binder-html"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="JOSE1"
+        windowtype="Komodo:BrowerWindow"
+        onload="OnLoad();"
+        orient="vertical"
+        flex="1"
+        width="550"
+        height="500"
+        persist="screenX screenY width height">
+
+<script>
+function OnFrameClick(event){
+
+    if( params.onclick ){
+        params.onclick(event, binderFrame);
+    }
+}
+function OnLoad(){
+
+    binderFrame = document.getElementById('binderFrame');
+    params = window.arguments[0];
+    var url = params.url ? params.url : "";
+    var title = params.title ? params.title : "Binder Page";
+
+
+    document.title = title;
+
+    if( params.context){
+        params.context.frame = binderFrame;
+    }
+
+    //installProgressListener(binderFrame);
+
+    //binderFrame.setAttribute('src', url);
+
+    if( params.onload ){
+        params.onload(binderFrame);
+    }
+
+
+}
+function OnUnload() {
+    // Tear down the browser preview notifications.
+    var browser = document.getElementById("binderFrame");
+    removeProgressListener(browser);
+}
+
+var gProgressFilter = null;
+var gProgressListener = null;
+function installProgressListener(browser) {
+    if (gProgressFilter){
+        // Already setup.
+        return;
+    }
+
+    gProgressListener = {
+        QueryInterface : function(aIID){
+            if (aIID.equals(Components.interfaces.nsIWebProgressListener) || aIID.equals(Components.interfaces.nsISupportsWeakReference) || aIID.equals(Components.interfaces.nsISupports) ) {
+                return this;
+            }
+            throw Components.results.NS_NOINTERFACE;
+        },
+        init : function() {},
+        destroy : function() {},
+        onStateChange : function(aWebProgress, aRequest, aStateFlags, aStatus) {},
+        onProgressChange : function(aWebProgress, aRequest, aCurSelfProgress, aMaxSelfProgress, aCurTotalProgress, aMaxTotalProgress) {},
+        onLocationChange : function(aWebProgress, aRequest, aLocation){
+                    document.title = "aqui";
+
+                   var domWindow = aWebProgress.DOMWindow;
+                    if (domWindow == domWindow.top) {
+                        var unwrappedWindow = domWindow.wrappedJSObject;
+                        unwrappedWindow.test1 = function(){
+
+                        };
+                    }
+        },
+        onStatusChange : function(aWebProgress, aRequest, aStatus, aMessage) {},
+        onSecurityChange : function(aWebProgress, aRequest, aState) {}
+    };
+
+    gProgressFilter = Components.classes["@mozilla.org/appshell/component/browser-status-filter;1"].createInstance(Components.interfaces.nsIWebProgress);
+    gProgressFilter.addProgressListener(gProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+
+    browser.webProgress.addProgressListener(gProgressFilter, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+}
+function removeProgressListener(browser) {
+    if (!gProgressFilter){
+        // Already removed.
+        return;
+    }
+    browser.webProgress.removeProgressListener(gProgressFilter);
+    gProgressFilter.removeProgressListener(gProgressListener);
+    gProgressFilter = null;
+    gProgressListener = null;
+}
+</script>
+
+
+    <keyset id="keys">
+        <key keycode="VK_ESCAPE" modifiers="" oncommand="window.close();"/>
+        <key keycode="VK_RETURN" oncommand="window.close();"/>
+<!-- #if PLATFORM != "darwin" -->
+        <key key="W" modifiers="control" oncommand="window.close();" />
+
+<!-- #else -->
+        <key key="W" modifiers="meta" oncommand="window.close();" />
+<!-- #endif -->
+    </keyset>
+
+
+<browser id="binderFrame" context="context" type="chrome"
+src="chrome://binder/content/blank.html"
+flex="1"
+/>
+
+<script>
+function doNav(obj) {
+
+  var url = obj.selectedItem.value;
+  alert("working=" + url);
+  // note the firstChild is the menupopup element
+  document.getElementById('myFrame').setAttribute('src', url);
+}
+</script>
+</window>

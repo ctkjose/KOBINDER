@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE overlay PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<?xml-stylesheet href="chrome://komodo/skin" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/global/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/bindings/scrolltabs.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/bindings/sidebar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/bindings/views.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/bindings/widgets.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/toolbar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://komodo/skin/platform.css" type="text/css"?>
+<?xml-stylesheet href="chrome://NST/skin/default.css" type="text/css"?>
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script src="chrome://NST/content/prj.js" type="application/x-javascript"/>
+
+<vbox flex="1" id="REA-vbox">
+    <hbox align="center" id="REA-tabpanel-hbox">
+    <toolbarbutton id="REA-refresh-info-button"
+                   tooltiptext="Update info"
+                   buttonstyle="pictures"
+                   class="refreshInfo-icon"
+                   oncommand="REA.refresh();"/>
+    <toolbarbutton id="REA-scm-commit-button"
+                   tooltiptext="SCM Commit"
+                   buttonstyle="pictures"
+                   class="scm-commit"
+                   oncommand="REA.refresh();"/>
+    <toolbarbutton id="REA-scm-update-button"
+                   tooltiptext="SCM Update"
+                   buttonstyle="pictures"
+                   class="scm-update"
+                   oncommand="REA.refresh();"/>
+    </hbox>
+<script>
+function OnFrameClick(event){
+
+}
+function OnLoad(){
+
+    binderFrame = document.getElementById('binderFrame');
+    alert("here...");
+
+}
+function OnUnload() {
+
+}
+</script>
+    <browser id="binderConsoleFrame" context="context" type="chrome"
+    src="chrome://binder/content/blank.html"
+    flex="1"
+    />
+</vbox>
+</page>

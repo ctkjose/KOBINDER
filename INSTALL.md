@@ -1,0 +1,1 @@
+- Initial release. Only tested on Mac with Komodo 9.1 and 9.2 releases.
