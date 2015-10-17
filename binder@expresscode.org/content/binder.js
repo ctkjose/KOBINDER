@@ -54,10 +54,10 @@ binder.ko.projectHasActive = function(){
 	return true;
 }
 binder.ko.projectHasPathCurrentFile = function() {
-	return binder.ko.viewGetPathForDirectory().indexOf(binder.ko.getActiveProjectPath()) === 0;
+	return binder.ko.viewGetPathForDirectory().indexOf(binder.ko.projectGetPath()) === 0;
 };
 binder.ko.projectHasPath = function(path) {
-	return path.indexOf(binder.ko.getActiveProjectPath()) === 0;
+	return path.indexOf(binder.ko.projectGetPath()) === 0;
 };
 binder.ko.projectGetPath = function() {
     if (!ko.projects.manager.currentProject) return null;
@@ -74,8 +74,8 @@ binder.ko.projectGetPath = function() {
             : projectFileDir; // or use directory of the project file
 };
 /* Return all environment variables set in the project */
-binder.ko.projectGetKeys = function () {
-	var proj    = ko.projects.manager.currentProject;
+
+binder.ko.projectGetKeysFromInstance = function (proj) {
 	var prefs_data    = proj ? proj.prefset.getStringPref('userEnvironmentStartupOverride') : '';
 
 	var rx            = /^(.+)=(.+)$/gm;
@@ -90,7 +90,10 @@ binder.ko.projectGetKeys = function () {
 	}
 	return prefs;
 };
-binder.ko.getActiveProject = function() {
+binder.ko.projectGetKeys = function () {
+	return binder.ko.projectGetKeysFromInstance(ko.projects.manager.currentProject);
+};
+binder.ko.projectGetActive = function() {
     if (!ko.projects.manager.currentProject) return null;
     return binder.ko.getProjectInfo(ko.projects.manager.currentProject);
 }
@@ -109,13 +112,11 @@ binder.ko.getProjectInfo = function(kProject) {
     }
 
 	prj.projectGetKeys = function(){
-		return binder.ko.getActiveProjectGetKeys();
+		return binder.ko.projectGetKeysFromInstance(this.instance);
     }
 
     prj.settings = {};
     binder.project = prj;
-
-
 
     return binder.project;
 };
@@ -295,7 +296,7 @@ binder.ko.activeDoc = function(){
 binder.ko.shellExec = function (cmd, wait=false){
 	var out = '';
   	//alert(cmd);
-	var cwd = binder.ko.getActiveProjectPath();
+	var cwd = binder.ko.projectGetPath();
 	var process = binder.ko.comp_runservice.RunAndNotify(cmd, cwd, '', '');
 
 	if (wait) {
@@ -492,7 +493,7 @@ binder.onEventWithURI = function(subject, topic, data){
 
 
     var currentProjectPath = "";
-    var prj = binder.ko.getActiveProject();
+    var prj = binder.ko.projectGetActive();
     if( prj == null){
         binder.project_scope = "";
     }else{
