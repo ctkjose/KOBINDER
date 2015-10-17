@@ -5,8 +5,7 @@ function log(msg) {
 		var dirsSvc = Components.classes['@activestate.com/koDirs;1'].getService(Components.interfaces.koIDirs);
 		var filename = binder.ko.pathJoin(dirsSvc.userDataDir, 'binder.log');
 
-        var fileSvc = Components.classes["@activestate.com/koFileService;1"].getService(Components.interfaces.koIFileService);
-        var koIFileEx = fileSvc.getFileFromURI(binder.ko.pathGetURI(filename));
+        var koIFileEx = binder.ko.comp_files.getFileFromURI(binder.ko.pathGetURI(filename));
         // Initialize the file.
         koIFileEx.open("w");
         koIFileEx.close();
@@ -50,14 +49,17 @@ function XPCOM_CCIN(cName, ifaceName){
 };
 
 
-binder.ko.hasActiveProject = function(){
+binder.ko.projectHasActive = function(){
 	if (!ko.projects.manager.currentProject) return false;
 	return true;
 }
-binder.ko.isFileInActiveProject = function() {
-    return binder.ko.currentFileDir().indexOf(binder.ko.getActiveProjectPath()) === 0;
+binder.ko.projectHasPathCurrentFile = function() {
+	return binder.ko.viewGetPathForDirectory().indexOf(binder.ko.getActiveProjectPath()) === 0;
 };
-binder.ko.getActiveProjectPath = function() {
+binder.ko.projectHasPath = function(path) {
+	return path.indexOf(binder.ko.getActiveProjectPath()) === 0;
+};
+binder.ko.projectGetPath = function() {
     if (!ko.projects.manager.currentProject) return null;
     var prefs = ko.projects.manager.currentProject.prefset,
         projectFileDir =
@@ -72,7 +74,7 @@ binder.ko.getActiveProjectPath = function() {
             : projectFileDir; // or use directory of the project file
 };
 /* Return all environment variables set in the project */
-binder.ko.getActiveProjectGetKeys = function () {
+binder.ko.projectGetKeys = function () {
 	var proj    = ko.projects.manager.currentProject;
 	var prefs_data    = proj ? proj.prefset.getStringPref('userEnvironmentStartupOverride') : '';
 
@@ -169,8 +171,7 @@ binder.ko.runoutputWrite = function(str) {
     }
 };
 binder.ko.observeNotification = function(e, fn){
-	var o = Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService);
-	o.addObserver({ observe : fn }, e, false);
+	binder.ko.comp_observer.addObserver({ observe : fn }, e, false);
 }
 binder.ko.alert = function(msg){
 
@@ -212,15 +213,20 @@ binder.ko.createFileFromPath = function(path){
 	return file;
 };
 
-binder.ko.currentFileDir = function() {
-    return ko.interpolate.currentFilePath().replace(/[\/\\][^\/\\]+$/, '');
-};
-binder.ko.currentFilePath = function() {
-    return ko.interpolate.currentFilePath();
-};
+
 
 binder.ko.isDocInActiveProject = function(d){
 	//if ((d.file.indexOf(o.path_project) === 0)) o.flag_in_project = true;
+};
+
+binder.ko.currentFileDir = function() {
+    return ko.interpolate.currentFilePath().replace(/[\/\\][^\/\\]+$/, '');
+};
+binder.ko.viewGetPathForFile = function() {
+    return ko.interpolate.currentFilePath();
+};
+binder.ko.viewGetPathForDirectory = function() {
+    return ko.interpolate.currentFilePath().replace(/[\/\\][^\/\\]+$/, '');
 };
 
 binder.ko.pathListFiles = function(p){
@@ -244,6 +250,9 @@ binder.ko.pathIsAbsolute = function(path){
 binder.ko.pathDirectory = function(path){
 	return binder.ko.comp_ospath.dirname(path);
 };
+binder.ko.pathMakeDir = function(path){
+	return binder.ko.comp_os.mkdir(path);
+};
 binder.ko.pathNormalize = function(path){
 	return binder.ko.comp_ospath.normpath(path);
 };
@@ -258,6 +267,24 @@ binder.ko.pathGetExtension = function(path){
 }
 binder.ko.pathGetURI = function(path){
 	return ko.uriparse.localPathToURI(path);
+}
+
+
+binder.ko.fileCreateFromURI = function(url){
+	var koIFile = binder.ko.comp_files.getFileFromURI(url);
+	return koIFile;
+}
+binder.ko.fileCreateFromPath = function(path){
+	var koIFile = binder.ko.comp_files.getFileFromURI(binder.ko.pathGetURI(path));
+	return koIFile;
+}
+binder.ko.fileCreateTempWithContents = function(ext, contents){
+	 var koIFile = binder.ko.comp_files.makeTempFile(ext, "w");
+    
+    koIFile.puts(contents);
+    koIFile.close();
+	
+	return koIFile;
 }
 
 binder.ko.activeDoc = function(){
@@ -285,6 +312,12 @@ binder.ko.shellExec = function (cmd, wait=false){
  	}else{
 		return '';
 	}
+};
+binder.ko.shellExecProcess = function (cmd, cwd, env=null, cmd_input=null, cmd_output=null, cmd_error=null){
+	var out = '';
+  	//alert(cmd);
+	var process = binder.ko.comp_runservice.RunAndNotify(cmd, cwd, env, cmd_input, cmd_output, cmd_error);
+	return process;
 };
 
 binder.ko.loadJS = function(url, obj){
@@ -382,7 +415,8 @@ binder.initialize = function() {
 		binder.ko.comp_os = XPCOM_CCSV("@activestate.com/koOs;1", "koIOs");
 		binder.ko.comp_ospath = XPCOM_CCSV("@activestate.com/koOsPath;1", "koIOsPath");
         binder.ko.comp_files = XPCOM_CCSV("@activestate.com/koFileService;1", "koIFileService");
-
+		binder.ko.comp_observer = XPCOM_CCSV('@mozilla.org/observer-service;1', "nsIObserverService");
+		
 		binder.ko.observeNotification('project_added', binder.eventProjectReady);
 		binder.ko.observeNotification('project_removed', function(){ binder.project = null});
 
@@ -454,8 +488,6 @@ binder.broadcast = function(e){
 };
 
 binder.onEventWithURI = function(subject, topic, data){
-    //if(!binder.ko.isFileInActiveProject()) return;
-
 	log("got event(" + topic + ")");
 
 
@@ -493,6 +525,7 @@ binder.onEventWithURI = function(subject, topic, data){
 		}
 
         if( binder.project_scope.length > 0 ){
+			log("Got project= " + binder.project_scope );
             topic = binder.project_scope + "." + topic;
             for(var k in binder.listeners[topic]){
 			    var fn = binder.listeners[topic][k];

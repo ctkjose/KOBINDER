@@ -28,7 +28,7 @@ The second place is in your user home folder. For example ```/Users/ctk/komodo_b
 ### In your project's folder ###
 The third place is in the root folder of a Komodo project. Files in this folder are loaded when the project is opened ofr the first time.
 
-## What you can put in a komodo_bindings folder... ##
+## What can I put on a komodo_bindings folder... ##
 
 You can put any file with a ```.js``` extension in a ```komodo_bindings``` folder and it will be loaded.
 
@@ -40,15 +40,7 @@ WARNING: The order in which the scripts are loaded is not guaranteed and is OS s
 Create a JavaScript file with the same name as your project file and add ".binder.js" to the name.
 For example if my project's file is ```reasg.komodoproject```, then you create a ```reasg.binder.js``` file.
 
-
-## Bindings Folders ##
-
-You can create a ```komodo_bindings``` with javascript files that will be loaded automatically.
-
-You can create this folder in your project's folder or in your Komodo's folder.
-
-In MacOS it is located on ```~/Library/Application Support/KomodoEdit/9.1/```.
-
+This script is loaded before the scripts in your project's ```komodo_bindings``` folder.
 
 
 ## Binding Samples ##
@@ -71,26 +63,34 @@ binder.on( "project_added", function(p){
 } );
 ```
 
+```javascript
+binder.on( "project_added", function(p){
+    binder.ko.alert("my project_removed=" + o.name);
+} );
+```
+
 ## Interact with Komodo ##
 
 Binder provides some helper function to interact with Komodo.
 
 Check if Komodo has an active project open.
 ```javascript
-binder.ko.hasActiveProject(); //bool
+var ok = binder.ko.projectHasActive(); //bool
 ```
-Check if current file is in the active project.
+
+Check if a path is part of the active project.
 ```JavaScript
-binder.ko.isFileInActiveProject();  //bool
+var ok = binder.ko.projectHasPath(path);  //bool
 ```
+
 Get a string with the absolute path of the current project.
 ```javascript
-binder.ko.getActiveProjectPath();
+binder.ko.projectGetPath();
 ```
 
 Get an array with key/value pairs of all the environment variables defined in the active project.
 ```JavaScript
-binder.ko.getActiveProjectGetKeys();
+binder.ko.projectGetKeys();
 ```
 
 Get basic info about the active project. Returns a project object. See: Binder Value Type Project
@@ -147,6 +147,23 @@ binder.ko.shellExec(cmd);
 var wait = true;
 var output = binder.ko.shellExec(cmd, wait);
 ```
+
+Running a command with a Komodo procces using ```shellExecProcess()```. This method returns a ```process`` and is a direct mapping for Komodo's ```RunAndNotify``` service.
+```javascript
+var cmd = "ls -l /Users/ctk/Desktop";
+
+//binder.ko.shellExecProcess(cmd, cwd, env=null, cmd_input=null, cmd_output=null, cmd_error=null) 
+var p = binder.ko.shellExecProcess(cmd, null, null, null, null, null);
+var retval = p.wait(-1);
+
+alert("Exit code=" + retval);
+if( retval != 0){
+	alert("Command failed: " + p.getStderr());
+}else{
+	alert("Success: " + p.getStdout());
+}
+```
+return;
 
 ## Helpers to handle files ##
 
@@ -207,9 +224,24 @@ if( binder.ko.pathIsAbsolute(path) ){
 }
 ```
 
+Crate a directory
+```javascript
+binder.ko.pathMakeDir = function(path){
+	return binder.ko.comp_os.mkdir(path);
+};
+```
+
 Get an array of file names in a folder.
 ```javascript
 var items = binder.ko.pathListFiles( dir_path );
+```
+
+Create a temporary file with a given extension and contents.
+```javascript
+var extension = ".txt";
+var contents = "hello world\n";
+var kIoFile = binder.ko.fileCreateTempWithContents(extension, contents);
+alert("Path is: " + kIoFile.path);
 ```
 
  ```javascript

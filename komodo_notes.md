@@ -37,7 +37,46 @@ file.parent
 file.dirName
 file.exists()
 
-ko.uriparse.localPathToURI(dir);
+var koIFile = (Components.classes["@activestate.com/koFileService;1"].getService(Components.interfaces.koIFileService).
+					   
+koIFile.path
+koIFile.isLocal
+koIFile.isFile
+koIFile.displayPath
+koIFile.URI
+koIFile.dirName
+kIoFile.baseName
+kIoFile.scheme
+
+
+koIFile.open('rb');
+
+var koIFile = fileSvc.makeTempFile(".py", "w");
+koIFile.puts(fileContents);
+koIFile.close();
+
+//the view file is a koIFile
+kIoFile = view.koDoc.file;
+
+
+var koLocalFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+koLocalFile.initWithPath(kpzExtractFolder);
+koLocalFile.append(ko.uriparse.baseName(uri));
+
+koLocalFile.exists();
+koLocalFile.remove(false);
+
+
+var data = "hello world";
+var stream = Components.classes["@mozilla.org/network/safe-file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
+stream.init(koLocalFile, 0x04 | 0x08 | 0x20, /*0600*/384, 0); // write, create, truncate
+stream.write(data, data.length);
+stream.close();
+
+
+
+
+var url = ko.uriparse.localPathToURI(dir);
 defaultDir = ko.uriparse.dirName(prevSaveFile);
 defaultName = ko.uriparse.baseName(prevSaveFile);
 var ext = ko.uriparse.ext(targetPath); if (!ext)
