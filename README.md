@@ -22,8 +22,10 @@ For example in my mac the folder is ```/Users/ctk/Library/Application Support/Ko
 
 Here we usually put code that we want to share globally, including Binder addons (plugins).
 
+### In your home folder ###
 The second place is in your user home folder. For example ```/Users/ctk/komodo_bindings/```.
 
+### In your project's folder ###
 The third place is in the root folder of a Komodo project. Files in this folder are loaded when the project is opened ofr the first time.
 
 ## What you can put in a komodo_bindings folder... ##
