@@ -71,7 +71,7 @@ binder.on( "project_added", function(p){
 
 ## Interact with Komodo ##
 
-Binder provides some helper function to interact with Komodo.
+Binder provides some helpers to interact with Komodo.
 
 Check if Komodo has an active project open.
 ```javascript
@@ -140,7 +140,7 @@ Executes javascript code.
 binder.ko.executeJavaScript(js);
 ```
 
-Run a command in your CLI.
+Run a command in CLI.
 ```javascript
 binder.ko.shellExec(cmd);
 ```
@@ -209,7 +209,7 @@ Build a URI for a given local path.
 var url = binder.ko.pathGetURI(path);
 ```
 
-Join to paths.
+Join two paths.
 ```javascript
 var path = "/Users/ctk";
 var file_path = binder.ko.pathJoin(path, "Desktop/test.php");
@@ -254,6 +254,30 @@ alert("Path is: " + kIoFile.path);
 binder.ko.currentFileDir();
 ```
 
+Get a koIFileEx instance. Uses Komodo File Service Component.
+```javascript
+var kIoFile = binder.ko.fileCreateFromURI( uri );
+var s = "file.displayPath=[" + kIoFile.displayPath + "]\n";
+  s += "file.URI=[" + kIoFile.URI + "]\n";
+  s += "file.server=[" + kIoFile.server + "]\n";
+  s += "file.path=[" + kIoFile.path + "]\n";
+  s += "file.ext=[" + kIoFile.ext + "]\n";
+  s += "file.dirName=[" + kIoFile.dirName + "]\n";
+  s += "file.baseName=[" + kIoFile.baseName + "]\n";
+  s += "file.md5name=[" + kIoFile.leafName + "]\n";
+  s += "file.encodedURI=[" + kIoFile.encodedURI + "]\n";
+  s += "file.isLocal=[" + kIoFile.isLocal + "]\n";
+  s += "file.isFile=[" + kIoFile.isFile + "]\n";
+  s += "file.scheme=[" + kIoFile.scheme + "]\n";
+  s += "file.lastModifiedTime=[" + kIoFile.lastModifiedTime + "]\n";
+  s += "file.fileSize=[" + kIoFile.fileSize + "]\n";
+
+alert(s);
+```
+
+```javascript
+var kIoFile = binder.ko.fileCreateFromPath( uri );
+```
 
 
 Returns an instance of [nsILocalFile](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsILocalFile) from a given path.
@@ -261,6 +285,8 @@ Returns an instance of [nsILocalFile](https://developer.mozilla.org/en-US/docs/M
 ```javascript
 	var nsILocalFile = binder.ko.createFileFromPath(file_path);
 ```
+
+
 
 
 ## Binder Value Type: File ##
