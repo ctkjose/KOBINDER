@@ -53,6 +53,7 @@ koIFile.open('rb');
 
 var koIFile = fileSvc.makeTempFile(".py", "w");
 koIFile.puts(fileContents);
+var str = koIFile.readfile();
 koIFile.close();
 
 //the view file is a koIFile
