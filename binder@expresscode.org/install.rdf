@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>binder@expresscode.org</em:id>
     <em:name>Binder Tools</em:name>
-    <em:version>0.1</em:version>
+    <em:version>0.2</em:version>
     <em:description>Allow to bind events in projects.</em:description>
     <em:creator>Jose Cuevas</em:creator>
     <em:homepageURL>http://community.activestate.com/xpi/ko_binder</em:homepageURL>

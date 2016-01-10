@@ -54,7 +54,18 @@
 </head>
 <body>
 Welcome
+
+<script>
+function j(){
+  var binder = ko.extensions.binder;
+  var p = binder.ko.projectGetPath(); 
+  alert("alive");
+  alert(p);
+}
+
+</script>
 <div id="content">
+  <span class='' onclick="j">jose</span>
 </div>
 </body>
 </html>

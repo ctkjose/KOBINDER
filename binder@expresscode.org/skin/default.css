@@ -99,6 +99,9 @@
 .refreshInfo-icon{
   list-style-image: url('chrome://NST/skin/default/remove_filter.png');
 }
+.cmd-go {
+  list-style-image: url('chrome://binder/skin/default/filter.png');
+}
 .scm-commit{
   list-style-image: url('chrome://NST/skin/default/scm_commit.png');
 }

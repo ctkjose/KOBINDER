@@ -4,5 +4,16 @@
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+		<ko-pane id="workspace_bottom_area">
+			<browser type="ko-widget"
+                 id="binder-console"
+                 label="Binder Console"
+                 icon="chrome://binder/skin/default/class.png"
+                 src="chrome://binder/content/pane-info.xul"
+                 tab_onfocus="ko.extensions.bindercmd.onFocus();"/>
+		</ko-pane>
+			
+		
 <script src="chrome://binder/content/binder.js" type="application/x-javascript;version=1.7"/>
 </overlay>

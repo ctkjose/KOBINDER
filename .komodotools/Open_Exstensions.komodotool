@@ -1,0 +1,16 @@
+{
+  "keyboard_shortcut": "", 
+  "name": "Open Exstensions", 
+  "language": "JavaScript", 
+  "trigger_enabled": false, 
+  "value": [
+    "var cmd = \"open /Users/ctk/Library/Application\\\\ Support/KomodoEdit/9.3/XRE/extensions/\"; ", 
+    "", 
+    "binder.ko.shellExec(cmd);"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "async": false, 
+  "type": "macro", 
+  "trigger": "trigger_postopen"
+}

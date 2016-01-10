@@ -1,0 +1,16 @@
+{
+  "keyboard_shortcut": "", 
+  "name": "Open KOBINDER", 
+  "language": "JavaScript", 
+  "trigger_enabled": false, 
+  "value": [
+    "var p = binder.ko.projectGetPath();", 
+    "var cmd = \"open \" + p; ", 
+    "binder.ko.shellExec(cmd);"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "async": false, 
+  "type": "macro", 
+  "trigger": "trigger_postopen"
+}

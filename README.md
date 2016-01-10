@@ -228,9 +228,7 @@ if( binder.ko.pathIsAbsolute(path) ){
 
 Crate a directory
 ```javascript
-binder.ko.pathMakeDir = function(path){
-	return binder.ko.comp_os.mkdir(path);
-};
+var f = binder.ko.pathMakeDir(path);
 ```
 
 Get an array of file names in a folder.
@@ -302,7 +300,6 @@ o.currentProjectPath
 o.pathRelativeToProject
 
 o.file.path
-o.file.path
 o.file.parent
 o.file.dirName
 o.file.URI
@@ -327,14 +324,24 @@ p.projectGetKeys();
 p.settings = {};
 ```
 
+## Binder Javascript's helpers ##
 
-## Binder ToolWindow ##
+### Run javascript code in Komodo's context ###
+```js
+	binder.ko.executeJavaScript(code);
+```
 
-Build a tool window with ```binder.openToolWindow(params)```
+### Execute code from a url ###
+```js
+	var url = binder.ko.pathGetURI( path );
+	binder.ko.loadJS(url);
+```
 
-```javascript
 
+## Code Snippets ##
 
-
-
+## Get a files path ##
+```js
+	var doc = binder.ko.activeDoc();
+	var f = doc.file.path;
 ```

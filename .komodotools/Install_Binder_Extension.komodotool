@@ -1,0 +1,19 @@
+{
+  "keyboard_shortcut": "", 
+  "name": "Install Binder Extension", 
+  "language": "JavaScript", 
+  "trigger_enabled": false, 
+  "value": [
+    "var p = binder.ko.projectGetPath();", 
+    "p = p + \"/binder@expresscode.org/*\";", 
+    "", 
+    "var cmd = \"cp -R \" + p + \" /Users/ctk/Library/Application\\\\ Support/KomodoEdit/9.3/XRE/extensions/binder@expresscode.org/\"", 
+    "alert(cmd);", 
+    "binder.ko.shellExec(cmd);"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "async": false, 
+  "type": "macro", 
+  "trigger": "trigger_postopen"
+}

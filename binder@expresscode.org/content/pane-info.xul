@@ -10,25 +10,22 @@
 <?xml-stylesheet href="chrome://komodo/skin/platform.css" type="text/css"?>
 <?xml-stylesheet href="chrome://NST/skin/default.css" type="text/css"?>
 <page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-<script src="chrome://NST/content/prj.js" type="application/x-javascript"/>
+<script src="chrome://xtk2/content/xtk2.js" type="application/x-javascript"/>
+<script src="chrome://binder/content/bindercmd.js" type="application/x-javascript"/>
 
 <vbox flex="1" id="REA-vbox">
     <hbox align="center" id="REA-tabpanel-hbox">
-    <toolbarbutton id="REA-refresh-info-button"
-                   tooltiptext="Update info"
+        <textbox id="bindercmd-search-text"
+               value=""
+               oninput="ko.extensions.bindercmd.onTextChanged();"
+               flex="1"
+               class="search-box"/>
+    <toolbarbutton id="bindercmd-btn-go"
+                   tooltiptext="Go"
                    buttonstyle="pictures"
                    class="refreshInfo-icon"
-                   oncommand="REA.refresh();"/>
-    <toolbarbutton id="REA-scm-commit-button"
-                   tooltiptext="SCM Commit"
-                   buttonstyle="pictures"
-                   class="scm-commit"
-                   oncommand="REA.refresh();"/>
-    <toolbarbutton id="REA-scm-update-button"
-                   tooltiptext="SCM Update"
-                   buttonstyle="pictures"
-                   class="scm-update"
-                   oncommand="REA.refresh();"/>
+                   oncommand="ko.extensions.bindercmd.onSearch();"/>
+    
     </hbox>
 <script>
 function OnFrameClick(event){
@@ -44,9 +41,6 @@ function OnUnload() {
 
 }
 </script>
-    <browser id="binderConsoleFrame" context="context" type="chrome"
-    src="chrome://binder/content/blank.html"
-    flex="1"
-    />
+    <iframe id="binderConsoleFrame" context="context" type="chrome" src="chrome://binder/content/blank.html" flex="1"/>
 </vbox>
 </page>
