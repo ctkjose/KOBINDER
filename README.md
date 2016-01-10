@@ -324,14 +324,14 @@ p.projectGetKeys();
 p.settings = {};
 ```
 
-## Binder Javascript's helpers ##
+## Javascript's Helpers ##
 
 ### Run javascript code in Komodo's context ###
 ```js
 	binder.ko.executeJavaScript(code);
 ```
 
-### Execute code from a url ###
+### Execute code from an url ###
 ```js
 	var url = binder.ko.pathGetURI( path );
 	binder.ko.loadJS(url);
